@@ -5,7 +5,7 @@ Sorry, for now it's in development, so many functions don't work
 
 ## How to run:
 You can run Ishell by typing the next:
-```python
+```sh
 $ python3 main.py
 ```
 

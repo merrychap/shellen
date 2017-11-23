@@ -11,6 +11,8 @@ from asms.disasm import DisassemblerWrapper
 ASM_MODE = 'asm'
 DSM_MODE = 'dsm'
 
+INDENT = 25 * '='
+
 
 class Ishell:
     def __init__(self):
@@ -23,30 +25,30 @@ class Ishell:
 
         self.mode = ASM_MODE
 
-        self.execs = {
-            ASM_MODE: self.__asm,
-            DSM_MODE: self.__dsm
-        }
+        self.pexec = self.__asm
 
     def execv(self, cmd):
         return self.execs[self.mode].perform(cmd)
 
     def prompt(self):
-        cprint('<blue, bold>{}</>:<blue>{}</> <yellow,bold>></> '.format(self.mode, self.arch), end='')
+        cprint('<blue, bold>{}</>:<blue>{}</> <yellow,bold>></>'.format(self.mode, self.arch), end='')
 
     def create_handlers(self):
         def asm():
-            self.mode = ASM_MODE
+            self.mode  = ASM_MODE
+            self.pexec = self.__asm
             cprint()
         
         def dsm():
-            self.mode = DSM_MODE
+            self.mode  = DSM_MODE
+            self.pexec = self.__dsm
             cprint()
 
         self.__handlers = {
-            'help': self.help,
-            'asm':  asm,
-            'dsm':  dsm
+            'help':  self.help,
+            'asm':   asm,
+            'dsm':   dsm,
+            'archs': 
         }
 
     def exit(self):
@@ -57,7 +59,7 @@ class Ishell:
         while True:
             try:
                 self.prompt()
-                inp = input()
+                inp = input(' ')
 
                 if inp == '':
                     continue
@@ -73,11 +75,16 @@ class Ishell:
             except KeyboardInterrupt:
                 self.exit()
 
-            
-
     def help(self):
-        cprint(('\nThere are two modes:\n'
-                '     <white,bold>asm</>: Assembler mode.\n'
-                '     <white,bold>dsm</>: Disassembler mode.\n'
-                '\nYou can change modes just by typing <white,bold>asm</> or <white,bold>dsm</>\n'
+        cprint((
+            '\n<white, bold>MODES</>'
+            '\nYou can change current mode just by typing the name of a mode.\n'
+            'There are two modes:\n'
+            '\t<white,bold>asm</>: Assembler mode.\n'
+            '\t<white,bold>dsm</>: Disassembler mode.\n'
+            '\n'
         ))
+
+    def archs(self):
+        self.pexec.archs()
+        

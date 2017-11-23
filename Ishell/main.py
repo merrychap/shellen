@@ -1,3 +1,5 @@
+# import opt.completer
+
 from opt.appearance import cprint
 
 from ishell import Ishell

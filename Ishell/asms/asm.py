@@ -45,3 +45,6 @@ class AssemblerWrapper(BaseExecWrapper):
 
     def print_res(self, res):
         print(res)
+
+    def archs(self):
+        pass

@@ -27,8 +27,11 @@ class BaseExecWrapper(ABC):
 
     def perform(self, cmd):
         try:
-            res = self.executor.exec(cmd)
+            res = self.executor.execv(cmd)
             self.print_res(res)
             return True
         except Exception:
             return False
+
+    def archs(self):
+        pass

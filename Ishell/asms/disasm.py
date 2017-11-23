@@ -45,3 +45,6 @@ class DisassemblerWrapper(BaseExecWrapper):
     def print_res(self, res):
         for i in res:
             print("0x%08x:\t%s\t%s" %(i.address, i.mnemonic, i.op_str))
+
+    def archs(self):
+        pass

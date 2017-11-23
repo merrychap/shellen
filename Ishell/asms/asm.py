@@ -1,14 +1,16 @@
-from baseexc import BaseExec, BaseExecWrapper
+from asms.baseexc import BaseExec, BaseExecWrapper
 from archsconf import *
 
 from keystone import *
 
 
 class Assembler(BaseExec):
-    def __init__(self):
+    def __init__(self, parch):
+        super().__init__()
+
         self.init_archs()
 
-        self.arch = self.__archs[X86_32]
+        self.arch = self.__archs[parch]
         self.__ks = Ks(*self.arch)
 
     def init_archs(self):
@@ -31,13 +33,15 @@ class Assembler(BaseExec):
             SYSTEMZ: (KS_ARCH_SYSTEMZ, KS_MODE_BIG_ENDIAN),
         }
 
-    def exec(self, data):
+    def execv(self, data):
         return self.__ks.asm(data)
 
 
 class AssemblerWrapper(BaseExecWrapper):
-    def __init__(self):
-        self.executor = Assembler()
+    def __init__(self, arch):
+        super().__init__(arch)
+
+        self.executor = Assembler(self.arch)
 
     def print_res(self, res):
-        pass
+        print(res)

@@ -1,46 +1,78 @@
 import re
 import os
 
-
-DEFAULT = 'white'
-
-r_tag = re.compile(r'(<\w+>.*?</\w+>)')
-r_group_tag = re.compile(r'<(\w+)>(.*?)</(\w+)>')
+from colorama import init
+from termcolor import colored
 
 
-def printc(text='', end='\n'):
-    text = str(text)
-    stext = r_tag.split(text)
-    for word in stext:
-        match = r_group_tag.match(word)
-        txt = word
-        color = DEFAULT
-        if match is not None:
-            color_f = match.group(1)
-            color_s = match.group(3)
-            if color_f not in Colors.color or color_f != color_s:
-                color = DEFAULT
-            else:
-                color = color_f
-            txt = match.group(2)
-        if os.name != 'nt':
-            print(Colors.color[color] + txt + Colors.color[DEFAULT], end='')
+init()
+
+rtopen = re.compile(r'<([^/].+?)>')
+rtclos = re.compile(r'</>')
+
+
+class ColoredException(Exception):
+    pass
+
+
+def parse_text(text):
+    parsed = []
+    in_tag      = False
+    inner_text  = ''
+    for i in range(len(text)):
+        if text[i] == '<' and not in_tag:
+            in_tag = True
+            parsed.append(inner_text)
+            inner_text = '<'
+        elif text[i] == '>' and in_tag:
+            in_tag = False
+            parsed.append(inner_text + '>')
+            inner_text = ''
         else:
-            print(txt, end='')
-    print(end=end)
+            inner_text += text[i]
+    return list(filter(None, parsed + [inner_text]))
 
 
-class Colors:
-    color = {
-        'white': '\033[0m',
-        'red': '\033[31m',
-        'green': '\033[32m',
-        'yellow': '\033[33m',
-        'blue': '\033[34m',
-        'purple': '\033[35m',
-        'lred': '\033[1;31m',
-        'lgreen': '\033[1;32m',
-        'lyellow': '\033[1;33m',
-        'lblue': '\033[1;34m',
-        'lpurple': '\033[1;35m',
-    }
+def apply_colors(pd_text):
+    tag  = []
+    text = ''
+
+    for pos in range(len(pd_text)):
+        part = pd_text[pos]
+
+        opn = rtopen.findall(part)
+        cls = rtclos.findall(part)
+
+        if len(opn) != 0:
+            try:
+                tag = list(filter(None, [x.strip() for x in opn[0].split(',')]))
+                pd_text[pos] = ''
+            except KeyError:
+                raise ColoredException('Some errors in your tag')
+        elif len(cls) != 0:
+            if len(tag) == 0:
+                raise ColoredException('You don\'t have any open tag for the close tag')
+            try:
+                pd_text[pos-1] = Colored.apply(tag[0], tag[1:], text)
+                pd_text[pos]   = ''
+                
+                tag = []
+            except Exception:
+                raise ColoredException('Incorrect values in tag')
+        else:
+            text = part
+    return ''.join(pd_text)
+
+
+def cprint(text='', end='\n'):
+    colored_text = apply_colors(parse_text(text))
+    print(colored_text, end=end)
+
+
+class Colored:
+    colors = {'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white'}
+    hights = {'on_red', 'on_green', 'on_yellow', 'on_blue', 'on_magenta', 'on_cyan', 'on_white'}
+    attrs  = {'bold', 'dark', 'underline', 'blink', 'reverse', 'concealed'}
+
+    def apply(color, attrs, text):
+        return colored(text, color, attrs=attrs)

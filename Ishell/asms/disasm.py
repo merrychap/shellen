@@ -1,22 +1,19 @@
-from baseexc import BaseExec, BaseExecWrapper
+from asms.baseexc import BaseExec, BaseExecWrapper
 from archsconf import *
 
 from capstone import *
 
 
 class Disassembler(BaseExec):
-    def __init__(self):
+    def __init__(self, parch):
+        super().__init__()
+
         self.init_archs()
 
-        self.arch = self.__archs[X86_32]
+        self.arch = self.__archs[parch]
         self.__cs = Cs(*self.arch)
         
         self.baseaddr = 0x00080000
-
-    # def test(self):
-        # TODO remove this function
-        # for i in self.__cs.disasm(b'\x89\xd0\x40', 0):
-            # print("0x%08x:\t%s\t%s" %(i.address, i.mnemonic, i.op_str))
 
     def init_archs(self):
         ''' Initialize the dictionary of architectures for disassembling via capstone'''
@@ -35,13 +32,16 @@ class Disassembler(BaseExec):
             SYSTEMZ: (CS_ARCH_SYSZ,  CS_MODE_BIG_ENDIAN),
         }
 
-    def exec(self, data):
+    def execv(self, data):
         return self.__cs.disasm(data, self.baseaddr)
 
 
 class DisassemblerWrapper(BaseExecWrapper):
-    def __init__(self):
-        self.executor = Disassembler()
+    def __init__(self, arch):
+        super().__init__(arch)
+
+        self.executor = Disassembler(self.arch)
 
     def print_res(self, res):
-        pass
+        for i in res:
+            print("0x%08x:\t%s\t%s" %(i.address, i.mnemonic, i.op_str))

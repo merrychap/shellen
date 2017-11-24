@@ -1,6 +1,6 @@
 from opt.appearance import cprint
 
-from asms.baseexc import BaseExec, BaseExecWrapper
+from asms.baseexc import BaseExec, BaseExecWrapper, hex2bytes
 from archsconf import *
 
 from keystone import *
@@ -48,13 +48,6 @@ class AssemblerWrapper(BaseExecWrapper):
 
         self.executor = Assembler(self.arch)
 
-    def __to_bytes(self, s):
-        rbytes = ''
-        for i in range(0, len(s), 2):
-            hx = s[i:i+2]
-            rbytes += '\\x' + hx
-        return rbytes
-
     def __decorate_shellcode(self, sc, pbytes=True):
         cld_sc = ''
         offset = 4 if pbytes else 2
@@ -71,18 +64,18 @@ class AssemblerWrapper(BaseExecWrapper):
         encoding, count = res
         
         raw_hex   = hexlify(bytearray(encoding)).decode('utf-8')
-        raw_bytes = self.__to_bytes(raw_hex)
+        raw_bytes = hex2bytes(raw_hex)
 
         dec_sc_bytes = self.__decorate_shellcode(raw_bytes)
         dec_sc_hex   = self.__decorate_shellcode(raw_hex, False)
 
         is_zeroed = NULLBYTE in raw_bytes
         
-        prefix = '   <green,bold>[+]</> Shellcode generated.\n'
+        prefix = ''
         if is_zeroed:
             prefix += '   <yellow,bold>[!]</> Warning! Your shellcode contains <white,underline>null bytes</>!\n'
         cprint(prefix + (
-            '       Bytes count: <white,bold>{}</>\n'
+            '   <green,bold>[+]</> Bytes count: <white,bold>{}</>\n'
             '       Raw bytes:  "{}"\n'
             '       Hex string: "{}"\n'
             '\n'

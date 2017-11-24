@@ -1,7 +1,11 @@
-from asms.baseexc import BaseExec, BaseExecWrapper
+from opt.appearance import cprint
+
+from asms.baseexc import BaseExec, BaseExecWrapper, hex2bytes
 from archsconf import *
 
 from capstone import *
+
+from binascii import hexlify, unhexlify
 
 
 class Disassembler(BaseExec):
@@ -31,7 +35,7 @@ class Disassembler(BaseExec):
         }
 
     def execv(self, data):
-        return self.__cs.disasm(data, self.baseaddr)
+        return self.__cs.disasm(unhexlify(data), self.baseaddr)
 
 
 class DisassemblerWrapper(BaseExecWrapper):
@@ -42,4 +46,4 @@ class DisassemblerWrapper(BaseExecWrapper):
 
     def print_res(self, res):
         for i in res:
-            print("0x%08x:\t%s\t%s" %(i.address, i.mnemonic, i.op_str))
+            cprint("\t<cyan>0x{:08X}</>:\t<yellow,bold>{:<8}</><white,bold>{}</>".format(i.address, i.mnemonic, i.op_str))

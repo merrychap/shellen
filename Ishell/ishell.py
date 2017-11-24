@@ -35,12 +35,12 @@ class Ishell:
         def asm():
             self.mode  = ASM_MODE
             self.pexec = self.__asm
-            cprint()
+            cprint('\n<green>[+]</> Changed to <white,underline>asm</> (assembly) mode\n')
         
         def dsm():
             self.mode  = DSM_MODE
             self.pexec = self.__dsm
-            cprint()
+            cprint('\n<green>[+]</> Changed to <white,underline>dsm</> (disassembly) mode\n')
 
         def archs():
             cprint(self.pexec.archs())
@@ -66,7 +66,7 @@ class Ishell:
                     continue
                 elif inp in ['quit', 'q']:
                     self.exit()
-                elif len(inp.split(' ')) == 1:
+                elif len(inp.split(' ')) == 1 and inp in list(self.__handlers.keys()):
                     self.__handlers[inp]()
                 else:
                     self.execv(inp)

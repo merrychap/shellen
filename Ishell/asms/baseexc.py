@@ -11,10 +11,19 @@ from abc import ABC, abstractmethod
 MN_INF = -100000
 
 
+def hex2bytes(s):
+    rbytes = ''
+    for i in range(0, len(s), 2):
+        hx = s[i:i+2]
+        rbytes += '\\x' + hx
+    return rbytes
+
+
 class BaseExec(ABC):
     def __init__(self):
         super().__init__()
 
+        self.arch   = 'none'
         self._archs = self.avail_archs()
 
     def get_archs(self):
@@ -27,6 +36,9 @@ class BaseExec(ABC):
     @abstractmethod
     def avail_archs(self):
         pass
+
+    def set_arch(self, arch):
+        self.arch = arch
 
 
 class BaseExecWrapper(ABC):

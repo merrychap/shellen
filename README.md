@@ -14,3 +14,4 @@ $ python3 main.py
 - [capstone](https://github.com/aquynh/capstone)
 - [colorama](https://github.com/tartley/colorama)
 - [termcolor](https://pypi.python.org/pypi/termcolor)
+- [terminaltables](https://github.com/Robpol86/terminaltables)

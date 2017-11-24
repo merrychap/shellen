@@ -7,21 +7,16 @@ from capstone import *
 class Disassembler(BaseExec):
     def __init__(self, parch):
         super().__init__()
-
-        self.init_archs()
-
-        self.arch = self.__archs[parch]
+        
+        self.arch = self._archs[parch]
         self.__cs = Cs(*self.arch)
         
         self.baseaddr = 0x00080000
 
-    def init_archs(self):
+    def avail_archs(self):
         ''' Initialize the dictionary of architectures for disassembling via capstone'''
 
-        self.__archs = {
-            X86_16:  (CS_ARCH_X86,   CS_MODE_16),
-            X86_32:  (CS_ARCH_X86,   CS_MODE_32),
-            X64_64:  (CS_ARCH_X86,   CS_MODE_64),
+        return {
             ARM32:   (CS_ARCH_ARM,   CS_MODE_ARM),
             ARM64:   (CS_ARCH_ARM64, CS_MODE_LITTLE_ENDIAN),
             ARM_TB:  (CS_ARCH_ARM,   CS_MODE_THUMB),
@@ -30,6 +25,9 @@ class Disassembler(BaseExec):
             SPARC32: (CS_ARCH_SPARC, CS_MODE_BIG_ENDIAN),
             SPARC64: (CS_ARCH_SPARC, CS_MODE_V9),
             SYSTEMZ: (CS_ARCH_SYSZ,  CS_MODE_BIG_ENDIAN),
+            X86_16:  (CS_ARCH_X86,   CS_MODE_16),
+            X86_32:  (CS_ARCH_X86,   CS_MODE_32),
+            X86_64:  (CS_ARCH_X86,   CS_MODE_64),
         }
 
     def execv(self, data):
@@ -45,6 +43,3 @@ class DisassemblerWrapper(BaseExecWrapper):
     def print_res(self, res):
         for i in res:
             print("0x%08x:\t%s\t%s" %(i.address, i.mnemonic, i.op_str))
-
-    def archs(self):
-        pass

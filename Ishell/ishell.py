@@ -16,19 +16,17 @@ INDENT = 25 * '='
 
 class Ishell:
     def __init__(self):
-        self.create_handlers()
-
         self.arch  = X86_32
-
         self.__asm = AssemblerWrapper(self.arch)
         self.__dsm = DisassemblerWrapper(self.arch)
 
-        self.mode = ASM_MODE
-
+        self.mode  = ASM_MODE
         self.pexec = self.__asm
 
+        self.create_handlers()
+
     def execv(self, cmd):
-        return self.execs[self.mode].perform(cmd)
+        return self.pexec.perform(cmd)
 
     def prompt(self):
         cprint('<blue, bold>{}</>:<blue>{}</> <yellow,bold>></>'.format(self.mode, self.arch), end='')
@@ -44,11 +42,14 @@ class Ishell:
             self.pexec = self.__dsm
             cprint()
 
+        def archs():
+            cprint(self.pexec.archs())
+
         self.__handlers = {
             'help':  self.help,
             'asm':   asm,
             'dsm':   dsm,
-            'archs': 
+            'archs': archs
         }
 
     def exit(self):
@@ -63,25 +64,38 @@ class Ishell:
 
                 if inp == '':
                     continue
-                elif inp in ['exit', 'q']:
+                elif inp in ['quit', 'q']:
                     self.exit()
                 elif len(inp.split(' ')) == 1:
                     self.__handlers[inp]()
                 else:
-                    pass
+                    self.execv(inp)
                 
             except Exception as e:
                 cprint('<red,bold>[-]</> Error occured: {}'.format(e))
             except KeyboardInterrupt:
-                self.exit()
+                # self.exit()
+                cprint()
 
     def help(self):
         cprint((
+            '\n<white, bold>PROMPT INFO</>\n'
+            '   You can see a prompt format like <white,bold>mode</>:<white,bold>arch</>\n'
+            '   Where <white,underline>mode</> is a current assembly mode (see below for more information)\n'
+            '   And an <white,underline>arch</> is a chosen processor architecture.\n'
+            '\n<white, bold>BASIC</>\n'
+            '   Basic commands are listed below:\n'
+            '       <white,bold>• help</>: Show this help message.\n'
+            '       <white,bold>• quit, q</>: Finish the current session and quit.\n'
             '\n<white, bold>MODES</>'
-            '\nYou can change current mode just by typing the name of a mode.\n'
-            'There are two modes:\n'
-            '\t<white,bold>asm</>: Assembler mode.\n'
-            '\t<white,bold>dsm</>: Disassembler mode.\n'
+            '\n   You can change current mode just by typing the name of a mode.\n'
+            '   There are two modes:\n'
+            '       <white,bold>• asm</>: Assembler mode.\n'
+            '       <white,bold>• dsm</>: Disassembler mode.\n'
+            '\n<white, bold>COMMON COMMANDS</>\n'
+            '   This is common commands for both <white, underline>asm</> and <white, underline>dsm</> modes\n'
+            '       <white,bold>• archs</>: Print a table of available architectures for a current mode\n'
+            '\n'
             '\n'
         ))
 

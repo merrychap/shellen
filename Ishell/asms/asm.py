@@ -1,36 +1,41 @@
+from opt.appearance import cprint
+
 from asms.baseexc import BaseExec, BaseExecWrapper
 from archsconf import *
 
 from keystone import *
+
+from binascii import hexlify, unhexlify
+
+
+NULLBYTE = '\\x00'
 
 
 class Assembler(BaseExec):
     def __init__(self, parch):
         super().__init__()
 
-        self.init_archs()
-
-        self.arch = self.__archs[parch]
+        self.arch = self._archs[parch]
         self.__ks = Ks(*self.arch)
 
-    def init_archs(self):
+    def avail_archs(self):
         ''' Initialize the dictionary of architectures for assembling via keystone'''
 
-        self.__archs = {
-            X86_16:  (KS_ARCH_X86,     KS_MODE_16),
-            X86_32:  (KS_ARCH_X86,     KS_MODE_32),
-            X64_64:  (KS_ARCH_X86,     KS_MODE_64),
+        return {
             ARM32:   (KS_ARCH_ARM,     KS_MODE_ARM),
             ARM64:   (KS_ARCH_ARM64,   KS_MODE_LITTLE_ENDIAN),
             ARM_TB:  (KS_ARCH_ARM,     KS_MODE_THUMB),
+            HEXAGON: (KS_ARCH_HEXAGON, KS_MODE_BIG_ENDIAN),
             MIPS32:  (KS_ARCH_MIPS,    KS_MODE_MIPS32),
             MIPS64:  (KS_ARCH_MIPS,    KS_MODE_MIPS64),
-            HEXAGON: (KS_ARCH_HEXAGON, KS_MODE_BIG_ENDIAN),
             PPC32:   (KS_ARCH_PPC,     KS_MODE_PPC32),
             PPC64:   (KS_ARCH_PPC,     KS_MODE_PPC64),
             SPARC32: (KS_ARCH_SPARC,   KS_MODE_SPARC32),
             SPARC64: (KS_ARCH_SPARC,   KS_MODE_SPARC64),
             SYSTEMZ: (KS_ARCH_SYSTEMZ, KS_MODE_BIG_ENDIAN),
+            X86_16:  (KS_ARCH_X86,     KS_MODE_16),
+            X86_32:  (KS_ARCH_X86,     KS_MODE_32),
+            X86_64:  (KS_ARCH_X86,     KS_MODE_64),
         }
 
     def execv(self, data):
@@ -43,8 +48,43 @@ class AssemblerWrapper(BaseExecWrapper):
 
         self.executor = Assembler(self.arch)
 
-    def print_res(self, res):
-        print(res)
+    def __to_bytes(self, s):
+        rbytes = ''
+        for i in range(0, len(s), 2):
+            hx = s[i:i+2]
+            rbytes += '\\x' + hx
+        return rbytes
 
-    def archs(self):
-        pass
+    def __decorate_shellcode(self, sc, pbytes=True):
+        cld_sc = ''
+        offset = 4 if pbytes else 2
+        for pos in range(0, len(sc), offset):
+            _byte = sc[pos:pos+offset]
+            if _byte == (NULLBYTE if pbytes else NULLBYTE[2:]):
+                cld_sc += '<red,bold>' + _byte + '</>'
+            else:
+                cld_sc += '<white,bold>' + _byte + '</>'
+        return cld_sc
+
+
+    def print_res(self, res):
+        encoding, count = res
+        
+        raw_hex   = hexlify(bytearray(encoding)).decode('utf-8')
+        raw_bytes = self.__to_bytes(raw_hex)
+
+        dec_sc_bytes = self.__decorate_shellcode(raw_bytes)
+        dec_sc_hex   = self.__decorate_shellcode(raw_hex, False)
+
+        is_zeroed = NULLBYTE in raw_bytes
+        
+        prefix = '   <green,bold>[+]</> Shellcode generated.\n'
+        if is_zeroed:
+            prefix += '   <yellow,bold>[!]</> Warning! Your shellcode contains <white,underline>null bytes</>!\n'
+        cprint(prefix + (
+            '       Bytes count: <white,bold>{}</>\n'
+            '       Raw bytes:  "{}"\n'
+            '       Hex string: "{}"\n'
+            '\n'
+        ).format(len(encoding), dec_sc_bytes, dec_sc_hex))
+        

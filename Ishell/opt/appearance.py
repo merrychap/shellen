@@ -64,8 +64,12 @@ def apply_colors(pd_text):
     return ''.join(pd_text)
 
 
+def make_colors(text):
+    return apply_colors(parse_text(text))
+
+
 def cprint(text='', end='\n'):
-    colored_text = apply_colors(parse_text(text))
+    colored_text = make_colors(text)
     print(colored_text, end=end)
 
 

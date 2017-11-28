@@ -1,13 +1,18 @@
 # Ishell
 
 ## General
-Sorry, for now it's in development, so many functions don't work
+Ishell is an interactive shellcoding environment. If you want a handy tool to write shellcodes, then Ishell may be your friend.
 
 ## How to run:
 You can run Ishell by typing the next:
 ```sh
 $ python3 main.py
 ```
+There is ```help``` command that will explain almost everything.
+
+## Features
+### Assembly
+
 
 ## Requirements
 - [keystone](https://github.com/keystone-engine/keystone)

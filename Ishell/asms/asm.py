@@ -81,6 +81,6 @@ class AssemblerWrapper(BaseExecWrapper):
             '   <green,bold>[+]</> Bytes count: <white,bold>{}</>\n'
             '       Raw bytes:  "{}"\n'
             '       Hex string: "{}"\n'
-            '\n'
+            # '\n'
         ).format(len(encoding), dec_sc_bytes, dec_sc_hex))
         

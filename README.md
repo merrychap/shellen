@@ -21,14 +21,14 @@ $ python3 main.py
 There is ```help``` command inside the tool, that will explain almost everything.
 
 ## Features
-Ishell was created for assembling and disassembling instructions. So, there are two modes of using the tool: **asm** and **dsm**. Also, there are some other possibilities.
+Ishell was created for assembling and disassembling instructions, so there are two modes of using the tool: **asm** and **dsm** respectively. Of course, there are some other possibilities.
 
 ### Prompt
-It is an interactive tool, so there is a usefull prompt, displaying current mode and chosen architecture exactly for this mode. It looks as follows:
+Ishell also has a usefull prompt, displaying current mode and chosen architecture exactly for this mode. It looks as follows:
 ```
 asm:x86_32 >
 ```
-You can edit your input like you're typing in a terminal. Also, it has history of commands (just type up arrow to see them).
+You can edit your input like you're typing in a terminal. Also, it has a history of commands (just type up arrow to see them).
 
 To change current mode, enter ```asm``` or ```dsm``` in the prompt.
 ```
@@ -51,10 +51,10 @@ asm:x86_32 > mov edx, eax; xor eax, eax; inc edx; int 80;
        Raw bytes:  "\x89\xc2\x31\xc0\x42\xcd\x50"
        Hex string: "89c231c042cd50"
 ```
-If you assembled bytes contain a null byte, then Ishell will tell you about this.
+If your assembled bytes contain a null byte, then Ishell will tell you about this.
 
 ### Disassembling
-It works exactly as assembling. Type your bytes in the input prompt and see a result!
+It works exactly as assembling. Type your bytes in the input prompt and see the result!
 ```
 dsm:x86_32 > 89c231c042cd50
         0x00080000:     mov     edx, eax
@@ -64,7 +64,7 @@ dsm:x86_32 > 89c231c042cd50
 ```
 
 ### Architectures
-```asm``` and ```dsm``` modes work for different architectures. To see a list of available architectures for a current mode, type the next:
+```asm``` and ```dsm``` modes work for different architectures. To see a list of available architectures for a current mode, type this:
 ```
 dsm:x86_32 > archs
 ┌────────┬────────┬─────────┬─────────┬────────┐
@@ -75,7 +75,7 @@ dsm:x86_32 > archs
 └────────┴────────┴─────────┴─────────┴────────┘
 ```
 
-And if you want to change current architecture, then enter this:
+And if you want to change current architecture, enter follow:
 ```
 dsm:x86_32 > setarch arm32
 

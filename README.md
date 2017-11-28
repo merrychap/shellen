@@ -18,7 +18,7 @@ To run Ishell just type the next in your terminal:
 ```sh
 $ python3 main.py
 ```
-There is ```help``` command that will explain almost everything.
+There is ```help``` command inside the tool, that will explain almost everything.
 
 ## Features
 Ishell was created for assembling and disassembling instructions. So, there are two modes of using the tool: **asm** and **dsm**. Also, there are some other possibilities.

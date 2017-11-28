@@ -13,9 +13,9 @@ class Disassembler(BaseExec):
         super().__init__()
         
         self.arch = self._archs[parch]
-        self.__cs = Cs(*self.arch)
-        
         self.baseaddr = 0x00080000
+
+        self.update_engine()
 
     def avail_archs(self):
         ''' Initialize the dictionary of architectures for disassembling via capstone'''
@@ -34,6 +34,9 @@ class Disassembler(BaseExec):
             X86_64:  (CS_ARCH_X86,   CS_MODE_64),
         }
 
+    def update_engine(self):
+        self.__cs = Cs(*self.arch)
+
     def execv(self, data):
         return self.__cs.disasm(unhexlify(data), self.baseaddr)
 
@@ -45,5 +48,5 @@ class DisassemblerWrapper(BaseExecWrapper):
         self.executor = Disassembler(self.arch)
 
     def print_res(self, res):
-        for i in res:
-            cprint("\t<cyan>0x{:08X}</>:\t<yellow,bold>{:<8}</><white,bold>{}</>".format(i.address, i.mnemonic, i.op_str))
+        for line in res:
+            cprint("\t<cyan>0x{:08X}</>:\t<yellow,bold>{:<8}</><white,bold>{}</>".format(line.address, line.mnemonic, line.op_str))

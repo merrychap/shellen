@@ -37,8 +37,17 @@ class BaseExec(ABC):
     def avail_archs(self):
         pass
 
-    def set_arch(self, arch):
-        self.arch = arch
+    @abstractmethod
+    def update_engine(self, arch):
+        pass
+
+    def setarch(self, arch):
+        if arch in list(self.get_archs().keys()):
+            self.arch = self._archs[arch]
+            self.update_engine()
+            return True
+        else:
+            return False
 
 
 class BaseExecWrapper(ABC):
@@ -52,6 +61,10 @@ class BaseExecWrapper(ABC):
     @abstractmethod
     def print_res(self, res):
         pass
+
+    def setarch(self, arch):
+        self.arch = arch
+        return self.executor.setarch(arch)
 
     def perform(self, cmd):
         try:
@@ -81,9 +94,9 @@ class BaseExecWrapper(ABC):
                 cur.append(archs[pos])
             else:
                 loc_max = max(loc_max, len(cur))
-                filtered.append(['<red>{}</>'.format(x) for x in cur])
+                filtered.append(['<cyan>{}</>'.format(x) for x in cur])
                 cur = [archs[pos]]
-        filtered.append(['<red>{}</>'.format(x) for x in cur])
+        filtered.append(['<cyan>{}</>'.format(x) for x in cur])
         loc_max = max(loc_max, len(cur))
         
         table.append(['\r'] * len(filtered))

@@ -1,3 +1,8 @@
+try:
+    import readline
+except Exception:
+    pass
+
 import sys
 
 from opt.appearance import cprint
@@ -7,6 +12,8 @@ from archsconf import *
 from asms.asm import AssemblerWrapper
 from asms.disasm import DisassemblerWrapper
 
+from cli import CLI
+
 
 ASM_MODE = 'asm'
 DSM_MODE = 'dsm'
@@ -14,8 +21,10 @@ DSM_MODE = 'dsm'
 INDENT = 25 * '='
 
 
-class Ishell:
+class Ishell(CLI):
     def __init__(self):
+        super().__init__()
+
         self.arch  = X86_32
         self.__asm = AssemblerWrapper(self.arch)
         self.__dsm = DisassemblerWrapper(self.arch)
@@ -32,52 +41,43 @@ class Ishell:
         cprint('<blue, bold>{}</>:<blue>{}</> <yellow,bold>></>'.format(self.mode, self.arch), end='')
 
     def create_handlers(self):
-        def asm():
-            self.mode  = ASM_MODE
-            self.pexec = self.__asm
-            cprint('\n<green>[+]</> Changed to <white,underline>asm</> (assembly) mode\n')
-        
-        def dsm():
-            self.mode  = DSM_MODE
-            self.pexec = self.__dsm
-            cprint('\n<green>[+]</> Changed to <white,underline>dsm</> (disassembly) mode\n')
-
-        def archs():
-            cprint(self.pexec.archs())
-
-        self.__handlers = {
-            'help':  self.help,
-            'asm':   asm,
-            'dsm':   dsm,
-            'archs': archs
+        self.handlers = {
+            (self.RHELP,    self.help),
+            (self.RQUIT,    self.quit),
+            (self.RASM,     self.asm),
+            (self.RDSM,     self.dsm),
+            (self.RARCHS,   self.archs),
+            (self.RSETARCH, self.setarch)
         }
 
-    def exit(self):
-        cprint('\n\n<yellow>See you again!</>')
-        sys.exit()
+    def handle_command(self, command):
+        for regex, handler in self.handlers:
+            match = regex.match(command)
+            if match:
+                try:
+                    handler(*match.groups())
+                except Exception as e:
+                    handler()
+                return True
+        return self.execv(command)
 
     def irun(self):
         while True:
             try:
                 self.prompt()
-                inp = input(' ')
+                cmd = input(' ')
 
-                if inp == '':
+                if cmd == '':
                     continue
-                elif inp in ['quit', 'q']:
-                    self.exit()
-                elif len(inp.split(' ')) == 1 and inp in list(self.__handlers.keys()):
-                    self.__handlers[inp]()
                 else:
-                    self.execv(inp)
-                
+                    if not self.handle_command(cmd):
+                        cprint('\n<red,bold>[-]</> Invalid command.\n')
             except Exception as e:
-                cprint('<red,bold>[-]</> Error occured: {}'.format(e))
+                cprint('\n<red,bold>[-]</> Error occured: {}\n'.format(e))
             except KeyboardInterrupt:
-                # self.exit()
                 cprint()
 
-    def help(self):
+    def help(self, *args):
         cprint((
             '\n<white, bold>PROMPT INFO</>\n'
             '   You can see a prompt format like <white,bold>mode</>:<white,bold>arch</>\n'
@@ -99,6 +99,25 @@ class Ishell:
             '\n'
         ))
 
+    def quit(self):
+        cprint('\n\n<yellow>See you again!</>')
+        sys.exit()
+
+    def asm(self):
+        self.mode  = ASM_MODE
+        self.pexec = self.__asm
+        cprint('\n<green>[+]</> Changed to <white,underline>asm</> (assembly) mode\n')
+
+    def dsm(self):
+        self.mode  = DSM_MODE
+        self.pexec = self.__dsm
+        cprint('\n<green>[+]</> Changed to <white,underline>dsm</> (disassembly) mode\n')
+
     def archs(self):
-        self.pexec.archs()
-        
+        cprint(self.pexec.archs())
+
+    def setarch(self, arch):
+        if not self.pexec.setarch(arch):
+            cprint('<red,bold>[-]</> Incorrect architecture. Enter <white,bold>archs</> to see a list of available archs.')
+            return
+        self.arch = arch

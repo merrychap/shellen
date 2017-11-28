@@ -16,7 +16,7 @@ class Assembler(BaseExec):
         super().__init__()
 
         self.arch = self._archs[parch]
-        self.__ks = Ks(*self.arch)
+        self.update_engine()
 
     def avail_archs(self):
         ''' Initialize the dictionary of architectures for assembling via keystone'''
@@ -37,6 +37,9 @@ class Assembler(BaseExec):
             X86_32:  (KS_ARCH_X86,     KS_MODE_32),
             X86_64:  (KS_ARCH_X86,     KS_MODE_64),
         }
+
+    def update_engine(self):
+        self.__ks = Ks(*self.arch)
 
     def execv(self, data):
         return self.__ks.asm(data)

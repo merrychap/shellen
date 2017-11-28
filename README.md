@@ -103,7 +103,7 @@ Command | Description
 - [ ] Database of common shellcodes
 
 ## Pictures
-Little bunch of pictures
+Just a little bunch of pictures
 
 Just the example of using the tool.
 <p align="center">

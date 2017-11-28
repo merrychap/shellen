@@ -101,3 +101,21 @@ Command | Description
 ## TODO
 - [ ] Syscalls lists
 - [ ] Database of common shellcodes
+
+## Pictures
+Little bunch of pictures
+
+Just the example of using the tool.
+<p align="center">
+  <img src="screens/use.png">
+</p>
+
+Help screen.
+<p align="center">
+  <img src="screens/help.png">
+</p>
+
+Architecture tables.
+<p align="center">
+  <img src="screens/tables.png">
+</p>

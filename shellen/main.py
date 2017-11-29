@@ -2,16 +2,16 @@
 
 from opt.appearance import cprint
 
-from ishell import Ishell
+from shellen import Shellen
 
 
 def main():
-    ish = Ishell()
+    shell = Shellen()
 
     cprint(('<magenta>[*]</> You can type <white, bold>help</> to see the list of available commands.\n'
             '<magenta>[*]</> Also, to close this session you should enter <white,bold>q</> or <white,bold>quit</>\n'))
     
-    ish.irun()
+    shell.irun()
 
 
 if __name__ == '__main__':

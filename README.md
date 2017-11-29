@@ -6,19 +6,17 @@ Shellen is an interactive shellcoding environment. If you want a handy tool to w
 It uses [keystone](https://github.com/keystone-engine/keystone) and [capstone](https://github.com/aquynh/capstone) engines for all provided operations.
 
 ## Installing
-Just clone this repo and see the chapter ```How to run```.
-```sh
-git clone https://github.com/merrychap/shellen.git
-cd ./shellen
+You can install the stable version of shellen using pip3:
 ```
-In the future it will be changed on ```pip```.
+$ sudo pip3 install shellen
+```
 
 ## How to run:
 To run shellen just type the next in your terminal:
 ```sh
-$ python3 main.py
+$ shellen
 ```
-There is ```help``` command inside the tool, that will explain almost everything.
+There is the ```help``` command inside the tool, that will explain almost everything.
 
 ## Features
 Shellen was created for assembling and disassembling instructions, so there are two modes of using the tool: **asm** and **dsm** respectively. Of course, there are some other possibilities.

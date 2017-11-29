@@ -1,13 +1,8 @@
 # import opt.completer
 
-import os
-import sys
-
-sys.path.append(os.path.abspath(os.path.join(os.path.abspath(__file__), os.pardir)))
+from shell import Shellen
 
 from opt.appearance import cprint
-
-from shellen import Shellen
 
 
 def main():

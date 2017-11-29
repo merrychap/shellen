@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='shellen',
-    version='0.0.1',
+    version='0.0.5',
     description='Interactive environment for crafting shellcodes. Or it just can be used as a simple assembler/disassembler',
     url='https://github.com/merrychap/shellen',
     author='Mike Evdokimov',
@@ -24,7 +24,7 @@ setup(
         'Intended Audience :: Information Technology'
     ],
     keywords=['shellcode', 'pwn', 'assembler', 'disassembler'],
-    packages=['shellen'],
+    packages=['shellen', 'shellen/asms', 'shellen/opt'],
     install_requires=['keystone-engine', 'capstone', 'colorama', 'termcolor', 'terminaltables'],
     python_requires='>=3',
     entry_points={

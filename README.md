@@ -5,7 +5,7 @@ Shellen is an interactive shellcoding environment. If you want a handy tool to w
 
 It uses [keystone](https://github.com/keystone-engine/keystone) and [capstone](https://github.com/aquynh/capstone) engines for all provided operations.
 
-Shellen *works only on python3*, but it will be changed in the future!
+Shellen **works only on python3**. Maybe it will be changed in the future.
 
 ## Installing
 You can install the stable version of shellen using pip3:
@@ -13,8 +13,15 @@ You can install the stable version of shellen using pip3:
 $ sudo pip3 install shellen
 ```
 
+Or if you already have all required packages (see [Requirements](#requirements)):
+```
+$ python3 setup.py install
+```
+
+If you have any trouble with installing keystone-engine, then you should compile it by yourself (see the [COMPILE.md](https://github.com/keystone-engine/keystone/blob/master/docs/COMPILE.md) file in the [keystone](https://github.com/keystone-engine/keystone) repository)
+
 ## How to run:
-To run shellen just type the next in your terminal:
+After installing shellen and all its required packages, you can run shellen just by typing the next in your terminal:
 ```sh
 $ shellen
 ```

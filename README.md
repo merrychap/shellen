@@ -5,6 +5,8 @@ Shellen is an interactive shellcoding environment. If you want a handy tool to w
 
 It uses [keystone](https://github.com/keystone-engine/keystone) and [capstone](https://github.com/aquynh/capstone) engines for all provided operations.
 
+Shellen *works only on python3*, but it will be changed in the future!
+
 ## Installing
 You can install the stable version of shellen using pip3:
 ```

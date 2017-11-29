@@ -105,7 +105,7 @@ Command | Description
 ## Pictures
 Just a little bunch of pictures
 
-Just the example of using the tool.
+Example of using the tool.
 <p align="center">
   <img src="screens/use.png">
 </p>

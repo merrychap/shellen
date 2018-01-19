@@ -13,11 +13,27 @@ from archsconf import *
 from asms.asm import AssemblerWrapper
 from asms.disasm import DisassemblerWrapper
 
-from cli import CLI
+from syscalls.linux_handler import LinuxSysHandler
+
+from base import CLI
 
 
 ASM_MODE = 'asm'
 DSM_MODE = 'dsm'
+
+LINUX_OS   = 'linux'
+WINDOWS_OS = 'windows'
+MAC_OS     = 'macos'
+
+LINUX_PROMPT   = 'L'
+WINDOWS_PROMPT = 'W'
+MACOS_PROMPT   = 'M'
+
+OS_MATCHING = {
+    LINUX_OS:   LINUX_PROMPT,
+    WINDOWS_OS: WINDOWS_PROMPT,
+    MAC_OS:     MACOS_PROMPT
+}
 
 INDENT = 25 * '='
 
@@ -26,10 +42,15 @@ class Shellen(CLI):
     def __init__(self):
         super().__init__()
 
+        # Assembler and disassembler instances
         self.__asm = AssemblerWrapper(X86_32)
         self.__dsm = DisassemblerWrapper(X86_32)
 
+        # Syscalls handlers
+        self.__linuxsys = LinuxSysHandler()
+
         self.mode  = ASM_MODE
+        self.os    = LINUX_OS
         self.pexec = self.__asm
 
         self.create_handlers()
@@ -38,7 +59,7 @@ class Shellen(CLI):
         return self.pexec.perform(cmd)
 
     def prompt(self):
-        cprint('<blue, bold>{}</>:<blue>{}</> <yellow,bold>></>'.format(self.mode, self.pexec.arch), end='')
+        cprint('<red,bold>{}</>:<blue, bold>{}</>:<blue>{}</> <yellow,bold>></>'.format(OS_MATCHING[self.os], self.mode, self.pexec.arch), end='')
 
     def create_handlers(self):
         self.handlers = {
@@ -48,7 +69,10 @@ class Shellen(CLI):
             (self.RDSM,     self.dsm),
             (self.RARCHS,   self.archs),
             (self.RSETARCH, self.setarch),
-            (self.RCLEAR,   self.clear)
+            (self.RCLEAR,   self.clear),
+            (self.RSYSCALL, self.sys),
+            (self.RSETOS,   self.setos),
+            (self.RVSYS,    self.sysv)
         }
 
     def handle_command(self, command):
@@ -78,10 +102,13 @@ class Shellen(CLI):
             except KeyboardInterrupt:
                 cprint()
 
+    def __get_arch(self):
+        return self.pexec.executor.archname
+
     def help(self, *args):
         cprint((
             '\n<white,bold>PROMPT INFO</>\n'
-            '   The prompt format is <white,bold>mode</>:<white,bold>arch</>\n'
+            '   The prompt format is <white,bold>OS</>:<white,bold>mode</>:<white,bold>arch</>\n'
             '       <white,bold>* mode</> is a current <white,underline>assembly mode</> (by default it\'s asm). See below for more information.\n'
             '       <white,bold>* arch</> is a chosen processor <white,underline>architecture</> (by default it\'s x86_32).\n'
             '\n<white,bold>BASIC</>\n'
@@ -98,6 +125,8 @@ class Shellen(CLI):
             '   Common commands can be used for both <white, underline>asm</> and <white, underline>dsm</> modes.\n'
             '       <white,bold>* archs</>: Print a table of available architectures for a current mode.\n'
             '       <white,bold>* setarch [arch]</>: Change current processor architecture.\n'
+            '       <white,bold>* setos [OS]</>: Change current operation system (windows/linux/macos).\n'
+            '       <white,bold>* sys [pattern]</>: Search a syscall depending on OS, architecture and specified pattern.\n'
             '\n<white,bold>ASSEMBLY MODE</>\n'
             '   <white,bold>asm</> mode is intended for assembling instructions.\n'
             '   To assembly instuctions, write them separated by colons.\n'
@@ -147,3 +176,20 @@ class Shellen(CLI):
             return
         cprint('\n<green>[+]</> Architecture of <white,underline>{}</> changed to <white,underline>{}</>\n'.format(self.mode, arch))
         self.arch = arch
+
+    def setos(self, os):
+        try:
+            OS_MATCHING[os]
+            self.os = os
+            cprint('\n<green>[+]</> OS changed to {}.\n'.format(os))
+        except KeyError:
+            cprint('\n<red,bold>[-]</> There isn\'t such OS.\n')
+
+    def sys(self, pattern, verbose=False):
+        if self.os == LINUX_OS:
+            cprint(self.__linuxsys.get_table(self.__get_arch(), pattern, verbose))
+            # found = self.__linuxsys.search(self.__get_arch(), pattern)
+
+    def sysv(self, pattern):
+        self.sys(pattern, verbose=True)
+

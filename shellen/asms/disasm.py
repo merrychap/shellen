@@ -11,8 +11,9 @@ from binascii import hexlify, unhexlify
 class Disassembler(BaseExec):
     def __init__(self, parch):
         super().__init__()
-        
-        self.arch = self._archs[parch]
+
+        self.setarch(parch)
+
         self.baseaddr = 0x00080000
 
         self.update_engine()

@@ -10,3 +10,6 @@ class CLI:
         self.RDSM     = re.compile(r'^dsm$')
         self.RARCHS   = re.compile(r'^archs$')
         self.RSETARCH = re.compile(r'^setarch[ ]+([\w\d]+?)$')
+        self.RSYSCALL = re.compile(r'^sys[ ]+(.*?)$')
+        self.RVSYS    = re.compile(r'^sys[ ]+(.*?) verb$')
+        self.RSETOS   = re.compile(r'^setos (linux|windows|macos)$')

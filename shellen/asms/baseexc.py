@@ -23,8 +23,9 @@ class BaseExec(ABC):
     def __init__(self):
         super().__init__()
 
-        self.arch   = 'none'
-        self._archs = self.avail_archs()
+        self.arch     = (-1, -1)
+        self.archname = 'none'
+        self._archs   = self.avail_archs()
 
     def get_archs(self):
         return self._archs
@@ -42,6 +43,7 @@ class BaseExec(ABC):
         pass
 
     def setarch(self, arch):
+        self.archname = arch
         if arch in list(self.get_archs().keys()):
             self.arch = self._archs[arch]
             self.update_engine()

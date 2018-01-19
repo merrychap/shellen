@@ -15,8 +15,7 @@ class Assembler(BaseExec):
     def __init__(self, parch):
         super().__init__()
 
-        self.arch = self._archs[parch]
-        self.update_engine()
+        self.setarch(parch)
 
     def avail_archs(self):
         ''' Initialize the dictionary of architectures for assembling via keystone'''
@@ -81,6 +80,5 @@ class AssemblerWrapper(BaseExecWrapper):
             '   <green,bold>[+]</> Bytes count: <white,bold>{}</>\n'
             '       Raw bytes:  "{}"\n'
             '       Hex string: "{}"\n'
-            # '\n'
         ).format(len(encoding), dec_sc_bytes, dec_sc_hex))
         

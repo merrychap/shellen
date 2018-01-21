@@ -9,12 +9,12 @@ Shellen **works only on python3**. Maybe it will be changed in the future.
 
 ## Installing
 You can install the stable version of shellen using pip3:
-```
+```sh
 $ sudo pip3 install shellen
 ```
 
 Or if you already have all required packages (see [Requirements](#requirements)):
-```
+```sh
 $ python3 setup.py install
 ```
 
@@ -32,18 +32,18 @@ Shellen was created for assembling and disassembling instructions, so there are 
 
 ### Prompt
 It also has a usefull prompt, displaying current mode and chosen architecture exactly for this mode. It looks as follows:
-```
-asm:x86_32 >
+```sh
+L:asm:x86_32 >
 ```
 You can edit your input like you're typing in a terminal. Also, it has a history of commands (just type up arrow to see them).
 
 To change current mode, enter ```asm``` or ```dsm``` in the prompt.
-```
-dsm:arm32 > asm
+```sh
+L:dsm:arm32 > asm
 
 [+] Changed to asm (assembly) mode
 
-asm:x86_32 > dsm
+L:asm:x86_32 > dsm
 
 [+] Changed to dsm (disassembly) mode
 
@@ -52,8 +52,8 @@ dsm:arm32 >
 
 ### Assembling
 To assembly instuctions, type them separated by colons as follows:
-```
-asm:x86_32 > mov edx, eax; xor eax, eax; inc edx; int 80;
+```sh
+L:asm:x86_32 > mov edx, eax; xor eax, eax; inc edx; int 80;
    [+] Bytes count: 7
        Raw bytes:  "\x89\xc2\x31\xc0\x42\xcd\x50"
        Hex string: "89c231c042cd50"
@@ -62,8 +62,8 @@ If your assembled bytes contain a null byte, then shellen will tell you about th
 
 ### Disassembling
 It works exactly as assembling. Type your bytes in the input prompt and see the result!
-```
-dsm:x86_32 > 89c231c042cd50
+```sh
+L:dsm:x86_32 > 89c231c042cd50
         0x00080000:     mov     edx, eax
         0x00080002:     xor     eax, eax
         0x00080004:     inc     edx
@@ -72,8 +72,8 @@ dsm:x86_32 > 89c231c042cd50
 
 ### Architectures
 ```asm``` and ```dsm``` modes work for different architectures. To see a list of available architectures for a current mode, type this:
-```
-dsm:x86_32 > archs
+```sh
+L:dsm:x86_32 > archs
 ┌────────┬────────┬─────────┬─────────┬────────┐
 │        │        │         │         │        │
 │ arm32  │ mips32 │ sparc32 │ systemz │ x86_16 │
@@ -83,11 +83,25 @@ dsm:x86_32 > archs
 ```
 
 And if you want to change current architecture, enter follow:
-```
-dsm:x86_32 > setarch arm32
+```sh
+L:dsm:x86_32 > setarch arm32
 
 [+] Architecture of dsm changed to arm32
 ```
+
+### Syscalls
+It's apparent that in process of crafting a shellcode you will be needed syscalls. So, shellen will help you with that. Just type ```sys``` with a name of desired syscall and shellen will show you a list of possible syscalls you were looking for.
+```sh
+L:asm:x86_32 > sys open
+
+┌────────┬───────┬──────────────────────┬──────────────────────┬──────────────┬──────────────┐
+│ name   │ eax   │ ebx                  │ ecx                  │ edx          │ esi          │
+├────────┼───────┼──────────────────────┼──────────────────────┼──────────────┼──────────────┤
+│ open   │ 0x05  │ const char *filename │ int flags            │ umode_t mode │ -            │
+│ openat │ 0x127 │ int dfd              │ const char *filename │ int flags    │ umode_t mode │
+└────────┴───────┴──────────────────────┴──────────────────────┴──────────────┴──────────────┘
+```
+This prints possible variants of syscall depending on entered pattern. Syscall table for searching depends on chosen architecture and OS (Operating System). In this case it's ```x86_32``` and ```Linux```.
 
 ### Base commands
 Command | Description
@@ -110,7 +124,7 @@ Command | Description
 - [ ] Database of common shellcodes
 
 ## Pictures
-Just a little bunch of pictures
+Just a little bunch of pictures. (They are outdated because of adding OS)
 
 Example of using the tool.
 <p align="center">

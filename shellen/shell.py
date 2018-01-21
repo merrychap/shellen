@@ -109,6 +109,10 @@ class Shellen(CLI):
         cprint((
             '\n<white,bold>PROMPT INFO</>\n'
             '   The prompt format is <white,bold>OS</>:<white,bold>mode</>:<white,bold>arch</>\n'
+            '       <white,bold>* OS</> is a current <white,underline>Operating System</>.\n'
+            '           <white,bold>* L</> is <white,underline>Linux</>\n'
+            '           <white,bold>* W</> is <white,underline>Windows</>\n'
+            '           <white,bold>* M</> is <white,underline>MacOS</>\n'
             '       <white,bold>* mode</> is a current <white,underline>assembly mode</> (by default it\'s asm). See below for more information.\n'
             '       <white,bold>* arch</> is a chosen processor <white,underline>architecture</> (by default it\'s x86_32).\n'
             '\n<white,bold>BASIC</>\n'
@@ -125,8 +129,9 @@ class Shellen(CLI):
             '   Common commands can be used for both <white, underline>asm</> and <white, underline>dsm</> modes.\n'
             '       <white,bold>* archs</>: Print a table of available architectures for a current mode.\n'
             '       <white,bold>* setarch [arch]</>: Change current processor architecture.\n'
-            '       <white,bold>* setos [OS]</>: Change current operation system (windows/linux/macos).\n'
+            '       <white,bold>* setos [OS]</>: Change current operation system: <white,underline>windows/linux/macos</>.\n'
             '       <white,bold>* sys [pattern]</>: Search a syscall depending on OS, architecture and specified pattern.\n'
+            '       <white,bold>* sysv [pattern]</>: It\'s <white,underline>sys</> command, but with verbose output.\n'
             '\n<white,bold>ASSEMBLY MODE</>\n'
             '   <white,bold>asm</> mode is intended for assembling instructions.\n'
             '   To assembly instuctions, write them separated by colons.\n'
@@ -187,8 +192,7 @@ class Shellen(CLI):
 
     def sys(self, pattern, verbose=False):
         if self.os == LINUX_OS:
-            cprint(self.__linuxsys.get_table(self.__get_arch(), pattern, verbose))
-            # found = self.__linuxsys.search(self.__get_arch(), pattern)
+            cprint('\n' + self.__linuxsys.get_printable_table(self.__get_arch(), pattern, colored=True, verbose=verbose) + '\n')
 
     def sysv(self, pattern):
         self.sys(pattern, verbose=True)

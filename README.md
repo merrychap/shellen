@@ -31,11 +31,24 @@ There is the ```help``` command inside the tool, that will explain almost everyt
 Shellen was created for assembling and disassembling instructions, so there are two modes of using the tool: **asm** and **dsm** respectively. Of course, there are some other possibilities.
 
 ### Prompt
-It also has a usefull prompt, displaying current mode and chosen architecture exactly for this mode. It looks as follows:
+It also has a usefull prompt, displaying current mode, OS (Operating System for syscalls) and chosen architecture exactly for this mode. It looks as follows:
 ```sh
 L:asm:x86_32 >
 ```
 You can edit your input like you're typing in a terminal. Also, it has a history of commands (just type up arrow to see them).
+
+```L``` is the shortened name of ```Linux``` in the prompt. Below listed all other OS names:
+- ```L``` is Linux
+- ```W``` is Windows
+- ```M``` is MacOS
+
+If you want to change OS, then type ```setos [linux/windows/macos]``` as follows:
+```sh
+L:asm:x86_32 > setos windows
+
+[+] OS changed to windows.
+```
+
 
 To change current mode, enter ```asm``` or ```dsm``` in the prompt.
 ```sh
@@ -47,7 +60,7 @@ L:asm:x86_32 > dsm
 
 [+] Changed to dsm (disassembly) mode
 
-dsm:arm32 > 
+L:dsm:arm32 > 
 ```
 
 ### Assembling
@@ -124,7 +137,7 @@ Command | Description
 - [ ] Database of common shellcodes
 
 ## Pictures
-Just a little bunch of pictures. (They are outdated because of adding OS)
+Just a little bunch of pictures. (They are outdated because of adding different features)
 
 Example of using the tool.
 <p align="center">

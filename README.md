@@ -133,7 +133,9 @@ Command | Description
 
 
 ## TODO
-- [ ] Syscalls lists
+- [x] Assembling
+- [x] Disassembling
+- [x] Syscalls lists
 - [ ] Database of common shellcodes
 
 ## Pictures

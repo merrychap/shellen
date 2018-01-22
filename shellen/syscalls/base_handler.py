@@ -45,20 +45,42 @@ class SysHandler:
             return None
 
         used_hd = self.__fetch_used_headers(rawtable, verbose)
-        table   = [self.__make_colored_row(used_hd, 'yellow,bold') if colored else used_hd]
+        table   = [self.__make_colored_row(used_hd, 'yellow,bold', upper=True) if colored else used_hd]
 
         for command in rawtable:
             cur_tb_field = []
             for hd in used_hd:
                 value = command[hd]
-                cur_tb_field.append(value)
+                cur_tb_field.append(self.__make_colored_field(value, hd, verbose=verbose))
             table.append(cur_tb_field)
         return SingleTable(table)
 
-    def __make_colored_row(self, row, pcolor):
-        return [make_colors('<{}>{}</>'.format(pcolor, val)) for val in row]
+    def __make_colored_field(self, field, hd, verbose=False):
+        if hd == NAME_FIELD:
+            return make_colors('<red>{}</>'.format(field))
+        elif self.__is_number(field):
+            return make_colors('<green>{}</>'.format(field))
+        else:
+            parts = field.split(' ')
+            if verbose:
+                return make_colors('<magenta>{}</> <white,bold>{}</>'.format(' '.join(parts[:-1]), parts[-1]))
+            else:
+                return make_colors('<white,bold>{}</>'.format(parts[-1]))
+
+    def __is_number(self, s, base=16):
+        try:
+            int(s, base)
+            return True
+        except Exception:
+            return False
+
+    def __make_colored_row(self, row, pcolor, upper=False):
+        return [make_colors('<{}>{}</>'.format(pcolor, val.upper() if upper else val)) for val in row]
 
     def __fetch_used_headers(self, table, verbose=False):
+        def hdkey(hd):
+            return -len(hd), hd.upper()
+
         used_hd = set()
         for command in table:
             for header, value in command.items():
@@ -67,7 +89,7 @@ class SysHandler:
         used_hd.remove(NAME_FIELD)
         used_hd.remove(DEF_FIELD)
         used_hd.remove(ID_FIELD)
-        return [NAME_FIELD] + list(sorted(used_hd)) + ([DEF_FIELD] if verbose else [])
+        return [NAME_FIELD] + sorted(list(used_hd), key=hdkey) + ([DEF_FIELD] if verbose else [])
 
     def search(self, arch, pattern):
         try:

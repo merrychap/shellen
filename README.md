@@ -116,6 +116,17 @@ L:asm:x86_32 > sys open
 ```
 This prints possible variants of syscall depending on entered pattern. Syscall table for searching depends on chosen architecture and OS (Operating System). In this case it's ```x86_32``` and ```Linux```.
 
+
+### Common shellcodes
+Shellen can show you a list of common shellcodes depending on your keyword. The example of using placed in ```Pictures``` section. It uses API of shell-storm.org site (thanks to the author!). You can use it like this:
+```sh
+L:asm:x86_32 > shell <keyword> <count>
+```
+Actually, ```count``` parameter isn't required.
+
+### Operating Systems
+It was assumed that there will be several OSs (Linux, Windows and MacOS), but right now supported only Linux. If you want to add functionality for Windows or MacOS, then write an issue and I will add it.
+
 ### Base commands
 Command | Description
 ------- | -----------
@@ -136,22 +147,28 @@ Command | Description
 - [x] Assembling
 - [x] Disassembling
 - [x] Syscalls lists
-- [ ] Database of common shellcodes
+- [x] Database of common shellcodes
 
 ## Pictures
 Just a little bunch of pictures. (They are outdated because of adding different features)
 
-Example of using the tool.
-<p align="center">
-  <img src="screens/use.png">
-</p>
-
-Help screen.
-<p align="center">
+<p align="left">
   <img src="screens/help.png">
 </p>
 
-Architecture tables.
-<p align="center">
+<p align="left">
+  <img src="screens/use.png">
+</p>
+
+<p align="left">
+  <img src="screens/syscalls.png">
+</p>
+
+<p align="left">
+  <img src="screens/shell.png">
+</p>
+
+<p align="left">
   <img src="screens/tables.png">
 </p>
+

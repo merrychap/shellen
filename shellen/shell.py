@@ -15,6 +15,8 @@ from asms.disasm import DisassemblerWrapper
 
 from syscalls.linux_handler import LinuxSysHandler
 
+from fetcher import ShellStormFetcher
+
 from base import CLI
 
 
@@ -37,6 +39,8 @@ OS_MATCHING = {
 
 INDENT = 25 * '='
 
+DEFUALT_COUNT = 15
+
 
 class Shellen(CLI):
     def __init__(self):
@@ -48,6 +52,9 @@ class Shellen(CLI):
 
         # Syscalls handlers
         self.__linuxsys = LinuxSysHandler()
+
+        # Shellcodes reciever
+        self.__shellstorm = ShellStormFetcher()
 
         self.mode  = ASM_MODE
         self.os    = LINUX_OS
@@ -72,7 +79,8 @@ class Shellen(CLI):
             (self.RCLEAR,   self.clear),
             (self.RSYSCALL, self.sys),
             (self.RSETOS,   self.setos),
-            (self.RVSYS,    self.sysv)
+            (self.RVSYS,    self.sysv),
+            (self.RSHELL,   self.shell)
         }
 
     def handle_command(self, command):
@@ -132,6 +140,9 @@ class Shellen(CLI):
             '       <white,bold>* setos [OS]</>: Change current operation system: <white,underline>windows/linux/macos</>.\n'
             '       <white,bold>* sys [pattern]</>: Search a syscall depending on OS, architecture and specified pattern.\n'
             '       <white,bold>* sysv [pattern]</>: It\'s <white,underline>sys</> command, but with verbose output.\n'
+            '       <white,bold>* shell [keyword] [count]</>: List of shellcodes with URL that suit a given keyword.\n'
+            '                                  [count] parameter can be <white,underline>ommited</>\n'
+            '                                  This function requests shellcodes from http://shell-storm.org\n'
             '\n<white,bold>ASSEMBLY MODE</>\n'
             '   <white,bold>asm</> mode is intended for assembling instructions.\n'
             '   To assembly instuctions, write them separated by colons.\n'
@@ -182,7 +193,8 @@ class Shellen(CLI):
         cprint('\n<green>[+]</> Architecture of <white,underline>{}</> changed to <white,underline>{}</>\n'.format(self.mode, arch))
         self.arch = arch
 
-    def setos(self, os):
+    def setos(self, ros):
+        os = ros.lower()
         try:
             OS_MATCHING[os]
             self.os = os
@@ -196,4 +208,13 @@ class Shellen(CLI):
 
     def sysv(self, pattern):
         self.sys(pattern, verbose=True)
+
+    def shell(self, pattern, count):
+        count = count.strip()
+        if count == '':
+            count = DEFUALT_COUNT
+        else:
+            count = int(count)
+        cprint('\n' + self.__shellstorm.fetch_table(pattern, os=self.os, arch=self.__get_arch(), count=count).table + '\n')
+
 

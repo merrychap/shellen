@@ -12,4 +12,5 @@ class CLI:
         self.RSETARCH = re.compile(r'^setarch[ ]+([\w\d]+?)$')
         self.RSYSCALL = re.compile(r'^sys[ ]+(.*?)$')
         self.RVSYS    = re.compile(r'^sysv[ ]+(.*?)$')
-        self.RSETOS   = re.compile(r'^setos (linux|windows|macos)$')
+        self.RSETOS   = re.compile(r'^setos[ ]+(.*?)$')
+        self.RSHELL   = re.compile(r'^shell[ ]+([^\s]*?)($|[ ]*\d*)$')

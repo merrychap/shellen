@@ -28,7 +28,10 @@ $ shellen
 There is the ```help``` command inside the tool, that will explain almost everything.
 
 ## Features
-Shellen was created for assembling and disassembling instructions, so there are two modes of using the tool: **asm** and **dsm** respectively. Of course, there are some other possibilities.
+Shellen was created for assembling and disassembling instructions, so there are two modes of using the tool: **asm** and **dsm** respectively. Of course, there are some other possibilities like syscalls tables, common shellcodes and other.
+
+## Problems/New features
+If you find a problem/bug or something, then just write an issue about this problem. Also, if you think, that some feature will be nice to use in shellen, then do the same -- write an issue and I will try to add this feature.
 
 ### Prompt
 It also has a usefull prompt, displaying current mode, OS (Operating System for syscalls) and chosen architecture exactly for this mode. It looks as follows:
@@ -141,7 +144,6 @@ Command | Description
 - [colorama](https://github.com/tartley/colorama)
 - [termcolor](https://pypi.python.org/pypi/termcolor)
 - [terminaltables](https://github.com/Robpol86/terminaltables)
-
 
 ## TODO
 - [x] Assembling

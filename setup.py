@@ -11,7 +11,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='shellen',
-    version='0.1.0',
+    version='0.1.1',
     description='Interactive environment for crafting shellcodes. Also, it just can be used as a simple assembler/disassembler',
     long_description=long_description,
     url='https://github.com/merrychap/shellen',
@@ -34,7 +34,7 @@ setup(
         'Intended Audience :: Information Technology'
     ],
     keywords=['shellcode', 'pwn', 'assembler', 'disassembler'],
-    packages=['shellen', 'shellen/opt', 'shellen/asms'],
+    packages=['shellen', 'shellen/opt', 'shellen/asms', 'shellen/syscalls'],
     install_requires=['keystone-engine', 'capstone', 'colorama', 'termcolor', 'terminaltables'],
     python_requires='>=3',
     entry_points={

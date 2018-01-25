@@ -181,7 +181,7 @@ class Shellen(CLI):
             cprint('\n<green>[+]</> Changed to <white,underline>dsm</> (disassembly) mode\n')
 
     def archs(self):
-        cprint(self.pexec.archs())
+        cprint('\n' + self.pexec.archs() + '\n')
 
     def clear(self):
         os.system('cls' if os.name == 'nt' else 'clear')

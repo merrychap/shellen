@@ -7,7 +7,7 @@ from os.path import join, isfile, splitext
 
 from difflib import SequenceMatcher
 
-from terminaltables import SingleTable
+from terminaltables import SingleTable, DoubleTable
 
 
 EMPTY_VALUE = '-'
@@ -53,7 +53,7 @@ class SysHandler:
                 value = command[hd]
                 cur_tb_field.append(self.__make_colored_field(value, hd, verbose=verbose))
             table.append(cur_tb_field)
-        return SingleTable(table)
+        return DoubleTable(table)
 
     def __make_colored_field(self, field, hd, verbose=False):
         if hd == NAME_FIELD:

@@ -3,7 +3,7 @@ import re
 from archsconf import *
 from opt.appearance import cprint, make_colors
 
-from terminaltables import SingleTable
+from terminaltables import SingleTable, AsciiTable, DoubleTable
 
 from abc import ABC, abstractmethod
 
@@ -107,7 +107,7 @@ class BaseExecWrapper(ABC):
             for j in range(len(filtered)):
                 cur_row.append('' if i >= len(filtered[j]) else make_colors(filtered[j][i]))
             table.append(cur_row)
-        rtable = SingleTable(table)
+        rtable = DoubleTable(table)
         rtable.inner_heading_row_border = False
         return rtable.table
 

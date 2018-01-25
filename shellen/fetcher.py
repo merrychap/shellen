@@ -5,7 +5,7 @@ from archsconf import *
 
 from opt.appearance import cprint, make_colors
 
-from terminaltables import SingleTable
+from terminaltables import SingleTable, DoubleTable
 
 
 SHELL_URL = 'http://shell-storm.org/api/?s={}'
@@ -73,7 +73,7 @@ class ShellStormFetcher:
     def fetch_table(self, pattern, os='linux', arch=X86_32, count=0):
         cprint('\n<magenta,bold>[*]</> Connecting to shell-storm.org...')
         rowtable = self.fetch(pattern, os, arch, count, True)
-        return SingleTable(rowtable)
+        return DoubleTable(rowtable)
 
     def sort_rows(self, table, count):
         def bytes_len(row):

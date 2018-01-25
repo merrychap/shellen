@@ -51,3 +51,4 @@ class DisassemblerWrapper(BaseExecWrapper):
     def print_res(self, res):
         for line in res:
             cprint("\t<cyan>0x{:08X}</>:\t<yellow,bold>{:<8}</><white,bold>{}</>".format(line.address, line.mnemonic, line.op_str))
+        cprint('\n')

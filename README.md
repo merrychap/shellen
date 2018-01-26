@@ -157,18 +157,22 @@ Just a little bunch of pictures. (They are outdated because of adding different 
 <p align="left">
   <img src="screens/help.png">
 </p>
+<hr>
 
 <p align="left">
   <img src="screens/use.png">
 </p>
+<hr>
 
 <p align="left">
   <img src="screens/syscalls.png">
 </p>
+<hr>
 
 <p align="left">
   <img src="screens/shell.png">
 </p>
+<hr>
 
 <p align="left">
   <img src="screens/tables.png">

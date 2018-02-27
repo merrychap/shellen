@@ -150,6 +150,9 @@ Command | Description
 - [x] Disassembling
 - [x] Syscalls lists
 - [x] Database of common shellcodes
+- [ ] Fix readline (right now it works ugly)
+- [ ] Add ROP builder
+- [ ] Add editing an assembly code in multiple lines
 
 ## Pictures
 Just a little bunch of pictures. (They are outdated because of adding different features)

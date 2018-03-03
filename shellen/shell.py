@@ -1,12 +1,10 @@
-try:
-    import readline
-except Exception:
-    pass
-
 import os
 import sys
 
-from opt.appearance import cprint
+from prompt_toolkit.history import InMemoryHistory
+from prompt_toolkit import prompt
+
+from opt.appearance import cprint, make_colors
 
 from archsconf import *
 
@@ -62,11 +60,13 @@ class Shellen(CLI):
 
         self.create_handlers()
 
+        self.history = InMemoryHistory()
+
     def execv(self, cmd):
         return self.pexec.perform(cmd)
 
-    def prompt(self):
-        cprint('<red,bold>{}</>:<blue, bold>{}</>:<blue>{}</> <yellow,bold>></>'.format(OS_MATCHING[self.os], self.mode, self.pexec.arch), end='')
+    def get_colored_prompt(self):
+        return make_colors('<red,bold>{}</>:<blue, bold>{}</>:<blue>{}</> <yellow,bold>></>'.format(OS_MATCHING[self.os], self.mode, self.pexec.arch))
 
     def create_handlers(self):
         self.handlers = {
@@ -97,8 +97,8 @@ class Shellen(CLI):
     def irun(self):
         while True:
             try:
-                self.prompt()
-                cmd = input(' ')
+                cprint(self.get_colored_prompt(), end='')
+                cmd = prompt(' ', history=self.history)
 
                 if cmd == '':
                     continue
@@ -116,7 +116,7 @@ class Shellen(CLI):
     def help(self, *args):
         cprint((
             '\n<white,bold>PROMPT INFO</>\n'
-            '   The prompt format is <white,bold>OS</>:<white,bold>mode</>:<white,bold>arch</>\n'
+            '   The get_colored_prompt format is <white,bold>OS</>:<white,bold>mode</>:<white,bold>arch</>\n'
             '       <white,bold>* OS</> is a current <white,underline>Operating System</>.\n'
             '           <white,bold>* L</> is <white,underline>Linux</>\n'
             '           <white,bold>* W</> is <white,underline>Windows</>\n'

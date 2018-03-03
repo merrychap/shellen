@@ -39,13 +39,13 @@ Shellen was created for assembling and disassembling instructions, so there are 
 If you find a problem/bug or something, then just write an issue about this problem. Also, if you think, that some feature will be nice to use in shellen, then do the same -- write an issue and I will try to add this feature.
 
 ### Prompt
-It also has a usefull prompt, displaying current mode, OS (Operating System for syscalls) and chosen architecture exactly for this mode. It looks as follows:
+It also has a usefull get_colored_prompt, displaying current mode, OS (Operating System for syscalls) and chosen architecture exactly for this mode. It looks as follows:
 ```sh
 L:asm:x86_32 >
 ```
 You can edit your input like you're typing in a terminal. Also, it has a history of commands (just type up arrow to see them).
 
-```L``` is the shortened name of ```Linux``` in the prompt. Below listed all other OS names:
+```L``` is the shortened name of ```Linux``` in the get_colored_prompt. Below listed all other OS names:
 - ```L``` is Linux
 - ```W``` is Windows
 - ```M``` is MacOS
@@ -58,7 +58,7 @@ L:asm:x86_32 > setos windows
 ```
 
 
-To change current mode, enter ```asm``` or ```dsm``` in the prompt.
+To change current mode, enter ```asm``` or ```dsm``` in the get_colored_prompt.
 ```sh
 L:dsm:arm32 > asm
 
@@ -82,7 +82,7 @@ L:asm:x86_32 > mov edx, eax; xor eax, eax; inc edx; int 80;
 If your assembled bytes contain a null byte, then shellen will tell you about this.
 
 ### Disassembling
-It works exactly as assembling. Type your bytes in the input prompt and see the result!
+It works exactly as assembling. Type your bytes in the input get_colored_prompt and see the result!
 ```sh
 L:dsm:x86_32 > 89c231c042cd50
         0x00080000:     mov     edx, eax

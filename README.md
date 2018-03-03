@@ -1,14 +1,14 @@
 # Shellen
 
 ## General
-Shellen is an interactive shellcoding environment. If you want a handy tool to write shellcodes, then shellen may be your friend. Also, it can be used just as assembly/disassembly tool.
+Shellen is an interactive shellcoding environment. If you want a handy tool to write shellcodes, then shellen may be your friend. Shellen can also be used as an assembly or disassembly tool.
 
-It uses [keystone](https://github.com/keystone-engine/keystone) and [capstone](https://github.com/aquynh/capstone) engines for all provided operations.
+[keystone](https://github.com/keystone-engine/keystone) and [capstone](https://github.com/aquynh/capstone) engines are used for all of shellen's operations.
 
-Shellen **works only on python3**. Maybe support for python2 will appear in the future.
+Shellen **only works on python3**. python2 support may appear in the future.
 
 ## Installing
-First of all, install the next dependencies:
+First, you should install shellen's dependencies:
 ```sh
 $ sudo apt-get install cmake python3-dev python3-setuptools
 ```
@@ -23,27 +23,24 @@ Or if you already have all required packages (see [Requirements](#requirements))
 $ python3 setup.py install
 ```
 
-If you have any trouble with installing keystone-engine, then you should compile it by yourself (see the [COMPILE.md](https://github.com/keystone-engine/keystone/blob/master/docs/COMPILE.md) file in the [keystone](https://github.com/keystone-engine/keystone) repository)
+If you have any problems with installing keystone-engine, then you should compile keystone-engine (see the [COMPILE.md](https://github.com/keystone-engine/keystone/blob/master/docs/COMPILE.md) file in the [keystone](https://github.com/keystone-engine/keystone) repository)
 
-## How to run:
-After installing shellen and all its required packages, you can run shellen just by typing the next in your terminal:
+## How to Run Shellen
+After installing shellen and its required packages, you can run shellen by typing the following in your terminal:
 ```sh
 $ shellen
 ```
-There is the ```help``` command inside the tool, that will explain almost everything.
+You can run shellen's ```help``` command to get information about shellen's usage.
 
-## Features
-Shellen was created for assembling and disassembling instructions, so there are two modes of using the tool: **asm** and **dsm** respectively. Of course, there are some other possibilities like syscalls tables, common shellcodes and other.
-
-## Problems/New features
-If you find a problem/bug or something, then just write an issue about this problem. Also, if you think, that some feature will be nice to use in shellen, then do the same -- write an issue and I will try to add this feature.
+## Shellen's Features
+Shellen assembles and disassembles instructions, so there are two usage modes: **asm** and **dsm** respectively. There are other features which include searching syscall tables and searching for common shellcodes.
 
 ### Prompt
-It also has a usefull prompt, displaying current mode, OS (Operating System for syscalls) and chosen architecture exactly for this mode. It looks as follows:
+Shellen has a useful prompt that displays the current mode, OS (operating system for syscalls), and the current mode's chosen architecture. Shellen's prompt looks like this:
 ```sh
 L:asm:x86_32 >
 ```
-You can edit your input like you're typing in a terminal. Also, it has a history of commands (just type up arrow to see them).
+You can edit your input like you're typing in a terminal. Also, shellen records your command history (just type your up arrow to see your previous commands).
 
 ```L``` is the shortened name of ```Linux``` in the prompt. Below listed all other OS names:
 - ```L``` is Linux
@@ -71,8 +68,15 @@ L:asm:x86_32 > dsm
 L:dsm:arm32 > 
 ```
 
+### Base Commands
+Command | Description
+------- | -----------
+```clear``` | Clear the terminal screen. As usual ```cls``` on Windows or ```clear``` on *nix systems.
+```help``` | Show the help message.
+```quit,q,exit``` | Finish the current session and quit
+
 ### Assembling
-To assembly instuctions, type them separated by colons as follows:
+To assemble instuctions, type them and separate them with semicolons as shown here:
 ```sh
 L:asm:x86_32 > mov edx, eax; xor eax, eax; inc edx; int 80;
    [+] Bytes count: 7
@@ -82,7 +86,7 @@ L:asm:x86_32 > mov edx, eax; xor eax, eax; inc edx; int 80;
 If your assembled bytes contain a null byte, then shellen will tell you about this.
 
 ### Disassembling
-It works exactly as assembling. Type your bytes in the input prompt and see the result!
+Disassembling is similar to assembling. Instead, type your bytes in the prompt and see the result!
 ```sh
 L:dsm:x86_32 > 89c231c042cd50
         0x00080000:     mov     edx, eax
@@ -92,7 +96,7 @@ L:dsm:x86_32 > 89c231c042cd50
 ```
 
 ### Architectures
-```asm``` and ```dsm``` modes work for different architectures. To see a list of available architectures for a current mode, type this:
+```asm``` and ```dsm``` modes work for different architectures. To see a list of available architectures for shellen's current mode, type this:
 ```sh
 L:dsm:x86_32 > archs
 ┌────────┬────────┬─────────┬─────────┬────────┐
@@ -103,7 +107,7 @@ L:dsm:x86_32 > archs
 └────────┴────────┴─────────┴─────────┴────────┘
 ```
 
-And if you want to change current architecture, enter follow:
+If you want to change the current architecture, enter the following:
 ```sh
 L:dsm:x86_32 > setarch arm32
 
@@ -111,7 +115,7 @@ L:dsm:x86_32 > setarch arm32
 ```
 
 ### Syscalls
-It's apparent that in process of crafting a shellcode you will be needed syscalls. So, shellen will help you with that. Just type ```sys``` with a name of desired syscall and shellen will show you a list of possible syscalls you were looking for.
+When you create a shellcode, you will need syscalls. To lookup syscalls with shellen, type ```sys```  and the name of your desired syscall. Shellen will produce a list of syscalls which may contain the syscall you were looking for.
 ```sh
 L:asm:x86_32 > sys open
 
@@ -122,25 +126,21 @@ L:asm:x86_32 > sys open
 │ openat │ 0x127 │ int dfd              │ const char *filename │ int flags    │ umode_t mode │
 └────────┴───────┴──────────────────────┴──────────────────────┴──────────────┴──────────────┘
 ```
-This prints possible variants of syscall depending on entered pattern. Syscall table for searching depends on chosen architecture and OS (Operating System). In this case it's ```x86_32``` and ```Linux```.
+``sys`` prints a list of possible variants for the provided syscall. The syscall table that shellen searches depends on the chosen architecture and operating system (OS). In this case, the architecture is ```x86_32``` and the OS is ```Linux```.
 
 
-### Common shellcodes
-Shellen can show you a list of common shellcodes depending on your keyword. The example of using placed in ```Pictures``` section. It uses API of shell-storm.org site (thanks to the author!). You can use it like this:
+### Common Shellcodes
+Shellen can show you a list of common shellcodes depending on your keyword. Shellen's keyword lookup uses shell-storm.org's API (thanks to the author!) and can be used like this:
 ```sh
 L:asm:x86_32 > shell <keyword> <count>
 ```
-Actually, ```count``` parameter isn't required.
+Note, the ```count``` parameter isn't required. There is an image of ``shell <keyword> <count>``'s output in the [Pictures](#pictures) section.
 
-### Operating Systems
-It was assumed that there will be several OSs (Linux, Windows and MacOS), but right now supported only Linux. If you want to add functionality for Windows or MacOS, then write an issue and I will add it.
+### Supported Operating Systems
+Currently, shellen is only supported on Linux. If you want to add functionality for Windows or MacOS, then write an issue and I will add support.
 
-### Base commands
-Command | Description
-------- | -----------
-```clear``` | Clear the terminal screen. As usual ```cls``` on Windows or ```clear``` on *nix systems.
-```help``` | Show the help message.
-```quit,q,exit``` | Finish the current session and quit
+## How to Report Problems or Request for New Features
+If you find a problem/bug or something, write an issue about this problem. Also, if you think that a feature will be a nice addition to shellen, do the same -- write an issue and I will try to add your requested feature.
 
 
 ## Requirements

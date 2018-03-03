@@ -2,7 +2,10 @@ import os
 import sys
 
 from prompt_toolkit.history import InMemoryHistory
-from prompt_toolkit import prompt
+from prompt_toolkit.shortcuts import prompt
+from prompt_toolkit.styles import style_from_pygments, style_from_dict
+
+from pygments.token import Token
 
 from opt.appearance import cprint, make_colors
 
@@ -58,17 +61,40 @@ class Shellen(CLI):
         self.os    = LINUX_OS
         self.pexec = self.__asm
 
-        self.create_handlers()
+        self.__prompt_init()
 
-        self.history = InMemoryHistory()
+        self.__create_handlers()
 
     def execv(self, cmd):
         return self.pexec.perform(cmd)
 
-    def get_colored_prompt(self):
-        return make_colors('<red,bold>{}</>:<blue, bold>{}</>:<blue>{}</> <yellow,bold>></>'.format(OS_MATCHING[self.os], self.mode, self.pexec.arch))
+    def __prompt_init(self):
+        self.history = InMemoryHistory()
+        self.asm_history = InMemoryHistory()
+        self.dsm_history = InMemoryHistory()
 
-    def create_handlers(self):
+        self.prompt_style = style_from_dict({
+            Token:       '#ff0066',
+            Token.OS:    '#ff3838',
+            Token.Colon: '#ffffff',
+            Token.Mode:  '#f9a9c3 bold',
+            Token.Arch:  '#5db2fc',
+            Token.Pound: '#ffd82a',
+        })
+
+    def prompt(self):
+        def get_prompt_tokens(cli):
+            return [
+                (Token.OS,    OS_MATCHING[self.os]),
+                (Token.Colon, ':'),
+                (Token.Mode,  self.mode),
+                (Token.Colon, ':'),
+                (Token.Arch,  self.pexec.arch),
+                (Token.Pound, ' > ')
+            ]
+        return prompt(get_prompt_tokens=get_prompt_tokens, style=self.prompt_style, history=self.history)
+
+    def __create_handlers(self):
         self.handlers = {
             (self.RHELP,    self.help),
             (self.RQUIT,    self.quit),
@@ -97,9 +123,7 @@ class Shellen(CLI):
     def irun(self):
         while True:
             try:
-                cprint(self.get_colored_prompt(), end='')
-                cmd = prompt(' ', history=self.history)
-
+                cmd = self.prompt()
                 if cmd == '':
                     continue
                 else:

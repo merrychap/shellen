@@ -11,7 +11,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='shellen',
-    version='0.1.9',
+    version='0.1.10',
     description='Interactive environment for crafting shellcodes. Also, it just can be used as a simple assembler/disassembler',
     long_description=long_description,
     url='https://github.com/merrychap/shellen',

@@ -76,6 +76,9 @@ class BaseExecWrapper(ABC):
         except Exception:
             return False
 
+    def last_shellcode(self):
+        return self.executor.get_last_shellcode()
+
     def __is_similar(self, s1, s2):
         pos = 0
         for pos in range(min(len(s1), len(s2))):

@@ -37,7 +37,7 @@ setup(
     packages=['shellen', 'shellen/opt', 'shellen/asms', 'shellen/syscalls'],
     include_package_data=True,
     packge_data={'shellen/syscalls':['linux_tables/*.json']},
-    install_requires=['keystone-engine', 'capstone', 'colorama', 'termcolor', 'terminaltables', 'prompt_toolkit'],
+    install_requires=['keystone-engine', 'capstone', 'colorama', 'termcolor', 'terminaltables', 'prompt_toolkit', 'requests'],
     python_requires='>=3',
     entry_points={
         'console_scripts': [

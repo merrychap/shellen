@@ -38,8 +38,14 @@ class Disassembler(BaseExec):
     def update_engine(self):
         self.__cs = Cs(*self.arch)
 
+    def __parse_bytes(self, data):
+        data = data.replace('\\x', '')
+        if data[0] == data[-1] and data[0] in ["'", '"']:
+            data = data[1:-1]
+        return data
+
     def execv(self, data):
-        return self.__cs.disasm(unhexlify(data), self.baseaddr)
+        return self.__cs.disasm(unhexlify(self.__parse_bytes(data)), self.baseaddr)
 
 
 class DisassemblerWrapper(BaseExecWrapper):

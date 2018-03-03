@@ -15,8 +15,12 @@ class Disassembler(BaseExec):
         self.setarch(parch)
 
         self.baseaddr = 0x00080000
+        self.last_shellcode = None
 
         self.update_engine()
+
+    def get_last_shellcode(self):
+        return self.last_shellcode
 
     def avail_archs(self):
         ''' Initialize the dictionary of architectures for disassembling via capstone'''
@@ -39,7 +43,10 @@ class Disassembler(BaseExec):
         self.__cs = Cs(*self.arch)
 
     def execv(self, data):
-        return self.__cs.disasm(unhexlify(data), self.baseaddr)
+        unhexed = unhexlify(data)
+        disassembled = self.__cs.disasm(unhexed, self.baseaddr)
+        self.last_shellcode = bytes(unhexed)
+        return disassembled
 
 
 class DisassemblerWrapper(BaseExecWrapper):

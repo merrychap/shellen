@@ -5,6 +5,9 @@ except Exception:
 
 import os
 import sys
+import signal
+
+import shellen_native as native
 
 from opt.appearance import cprint
 
@@ -65,6 +68,9 @@ class Shellen(CLI):
     def execv(self, cmd):
         return self.pexec.perform(cmd)
 
+    def last_shellcode(self):
+        return self.pexec.last_shellcode()
+
     def prompt(self):
         cprint('<red,bold>{}</>:<blue, bold>{}</>:<blue>{}</> <yellow,bold>></>'.format(OS_MATCHING[self.os], self.mode, self.pexec.arch), end='')
 
@@ -75,6 +81,7 @@ class Shellen(CLI):
             (self.RASM,     self.asm),
             (self.RDSM,     self.dsm),
             (self.RARCHS,   self.archs),
+            (self.RRUN,     self.run),
             (self.RSETARCH, self.setarch),
             (self.RCLEAR,   self.clear),
             (self.RSYSCALL, self.sys),
@@ -136,6 +143,9 @@ class Shellen(CLI):
             '\n<white,bold>COMMON COMMANDS FOR MODES</>\n'
             '   Common commands can be used for both <white, underline>asm</> and <white, underline>dsm</> modes.\n'
             '       <white,bold>* archs</>: Print a table of available architectures for a current mode.\n'
+            '       <white,bold>* run, r, go</>: Jump to the last shellcode in a subprocess. What could go wrong?\n'
+            '                     Note that you don\'t get to control the base address your code gets loaded at,\n'
+            '                     and this assumes that the instructions will make sense to your CPU.\n'
             '       <white,bold>* setarch [arch]</>: Change current processor architecture.\n'
             '       <white,bold>* setos [OS]</>: Change current operation system: <white,underline>windows/linux/macos</>.\n'
             '       <white,bold>* sys [pattern]</>: Search a syscall depending on OS, architecture and specified pattern.\n'
@@ -182,6 +192,21 @@ class Shellen(CLI):
 
     def archs(self):
         cprint('\n' + self.pexec.archs() + '\n')
+
+    def run(self):
+        shellcode = self.last_shellcode()
+        if not shellcode:
+            cprint('\n<red,bold>[-]</> Assemble or disassemble something first!\n')
+            return
+
+        result = native.run(shellcode)
+        if result < 0:
+            sig_info = signal.Signals(-result)
+            cprint('\n<red,bold>[-]</> Exited with signal <white>{}</> (<white,underline>{}</>)\n'.format(sig_info.name, sig_info.value))
+        elif result == 0:
+            cprint('\n<green>[+]</> Exited with status code 0.\n')
+        else: # result > 0
+            cprint('\n<yellow>[*]</> Exited with status code {}.\n'.format(result))
 
     def clear(self):
         os.system('cls' if os.name == 'nt' else 'clear')

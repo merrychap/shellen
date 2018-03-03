@@ -1,6 +1,6 @@
 from os import path
 
-from setuptools import setup, find_packages
+from setuptools import setup, find_packages, Extension
 
 
 here = path.abspath(path.dirname(__file__))
@@ -8,6 +8,10 @@ here = path.abspath(path.dirname(__file__))
 with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
+shellen_module = Extension(
+    'shellen_native',
+    sources=['./ext/shellen.c']
+)
 
 setup(
     name='shellen',
@@ -36,12 +40,13 @@ setup(
     keywords=['shellcode', 'pwn', 'assembler', 'disassembler', 'syscalls'],
     packages=['shellen', 'shellen/opt', 'shellen/asms', 'shellen/syscalls'],
     include_package_data=True,
-    packge_data={'shellen/syscalls':['linux_tables/*.json']},
+    package_data={'shellen/syscalls':['linux_tables/*.json']},
     install_requires=['keystone-engine', 'capstone', 'colorama', 'termcolor', 'terminaltables'],
     python_requires='>=3',
     entry_points={
         'console_scripts': [
             'shellen = shellen.main:main',
         ]
-    }
+    },
+    ext_modules=[shellen_module]
 )

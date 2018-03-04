@@ -95,6 +95,11 @@ L:dsm:x86_32 > 89c231c042cd50
         0x00080005:     int     0x50
 ```
 
+### Run shellcode
+Also, you can run your shellcode in a subprocess. **Be aware that this can harm your system!**. Jump to the last shellcode in a subprocess. What could go wrong?' Note that you don't get to control the base address your code gets loaded at, and this assumes that the instructions will make sense to your CPU. See ```help```inside ```shellen``` to see how to use it.
+
+I'm planning to execute subprocess in a some virtual environment in order to make it safer to run potentially dangerous shellcode.
+
 ### Architectures
 ```asm``` and ```dsm``` modes work for different architectures. To see a list of available architectures for shellen's current mode, type this:
 ```sh

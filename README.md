@@ -160,9 +160,10 @@ If you find a problem/bug or something, write an issue about this problem. Also,
 - [x] Disassembling
 - [x] Syscalls lists
 - [x] Database of common shellcodes
-- [ ] Fix readline (right now it works ugly)
 - [ ] Add ROP builder
 - [ ] Add editing an assembly code in multiple lines
+- [ ] Different histories for ```asm``` and ```dsm``` modes
+- [ ] Virtual environment to run shellcodes
 
 ## Pictures
 Just a little bunch of pictures. (They are outdated because of adding different features)

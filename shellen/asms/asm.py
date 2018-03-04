@@ -15,7 +15,11 @@ class Assembler(BaseExec):
     def __init__(self, parch):
         super().__init__()
 
+        self.last_shellcode = None
         self.setarch(parch)
+
+    def get_last_shellcode(self):
+        return self.last_shellcode
 
     def avail_archs(self):
         ''' Initialize the dictionary of architectures for assembling via keystone'''
@@ -41,7 +45,9 @@ class Assembler(BaseExec):
         self.__ks = Ks(*self.arch)
 
     def execv(self, data):
-        return self.__ks.asm(data)
+        shellcode, num_instructions = self.__ks.asm(data)
+        self.last_shellcode = bytes(shellcode)
+        return (shellcode, num_instructions)
 
 
 class AssemblerWrapper(BaseExecWrapper):

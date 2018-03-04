@@ -9,6 +9,7 @@ class CLI:
         self.RASM     = re.compile(r'^asm$')
         self.RDSM     = re.compile(r'^dsm$')
         self.RARCHS   = re.compile(r'^archs$')
+        self.RRUN     = re.compile(r'^r$|^run$|^go$')
         self.RSETARCH = re.compile(r'^setarch[ ]+([\w\d]+?)$')
         self.RSYSCALL = re.compile(r'^sys[ ]+(.*?)$')
         self.RVSYS    = re.compile(r'^sysv[ ]+(.*?)$')

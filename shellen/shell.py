@@ -75,7 +75,6 @@ class Shellen(CLI):
         return self.pexec.last_shellcode()
 
     def __prompt_init(self):
-        self.history = InMemoryHistory()
         self.asm_history = InMemoryHistory()
         self.dsm_history = InMemoryHistory()
 
@@ -88,6 +87,12 @@ class Shellen(CLI):
             Token.Pound: '#ffd82a',
         })
 
+    def __get_history(self):
+        if isinstance(self.pexec, AssemblerWrapper):
+            return self.asm_history
+        else:
+            return self.dsm_history
+
     def prompt(self):
         def get_prompt_tokens(cli):
             return [
@@ -98,7 +103,7 @@ class Shellen(CLI):
                 (Token.Arch,  self.pexec.arch),
                 (Token.Pound, ' > ')
             ]
-        return prompt(get_prompt_tokens=get_prompt_tokens, style=self.prompt_style, history=self.history)
+        return prompt(get_prompt_tokens=get_prompt_tokens, style=self.prompt_style, history=self.__get_history())
 
     def __create_handlers(self):
         self.handlers = {

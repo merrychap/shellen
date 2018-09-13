@@ -15,7 +15,7 @@ shellen_module = Extension(
 
 setup(
     name='shellen',
-    version='0.2.2',
+    version='0.3.0',
     description='Interactive environment for crafting shellcodes. Also, it just can be used as a simple assembler/disassembler',
     long_description=long_description,
     url='https://github.com/merrychap/shellen',

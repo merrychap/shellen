@@ -6,7 +6,7 @@ import shellen_native as native
 
 from prompt_toolkit.history import InMemoryHistory
 from prompt_toolkit.shortcuts import prompt
-from prompt_toolkit.styles import style_from_pygments, style_from_dict
+from prompt_toolkit.styles import style_from_pygments_dict
 
 from pygments.token import Token
 
@@ -78,7 +78,7 @@ class Shellen(CLI):
         self.asm_history = InMemoryHistory()
         self.dsm_history = InMemoryHistory()
 
-        self.prompt_style = style_from_dict({
+        self.prompt_style = style_from_pygments_dict({
             Token:       '#ff0066',
             Token.OS:    '#ff3838',
             Token.Colon: '#ffffff',
@@ -94,16 +94,16 @@ class Shellen(CLI):
             return self.dsm_history
 
     def prompt(self):
-        def get_prompt_tokens(cli):
-            return [
-                (Token.OS,    OS_MATCHING[self.os]),
-                (Token.Colon, ':'),
-                (Token.Mode,  self.mode),
-                (Token.Colon, ':'),
-                (Token.Arch,  self.pexec.arch),
-                (Token.Pound, ' > ')
-            ]
-        return prompt(get_prompt_tokens=get_prompt_tokens, style=self.prompt_style, history=self.__get_history())
+        message = [
+            ('class:pygments.os',    OS_MATCHING[self.os]),
+            ('class:pygments.colon', ':'),
+            ('class:pygments.mode',  self.mode),
+            ('class:pygments.colon', ':'),
+            ('class:pygments.arch',  self.pexec.arch),
+            ('class:pygments.pound', ' > ')
+        ]
+
+        return prompt(message, style=self.prompt_style, history=self.__get_history())
 
     def __create_handlers(self):
         self.handlers = {

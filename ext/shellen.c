@@ -12,7 +12,11 @@
 
 #include <Python.h>
 
-static size_t shellcode_buf_aligned_len(size_t len) {
+#define PROT_RWX (PROT_READ | PROT_WRITE | PROT_EXEC)
+
+static size_t
+shellcode_buf_aligned_len(size_t len)
+{
     /* Set up the pages like so - that way, if (when) we overrun the buffer,
      * we get a segfault and don't start executing into no-man's land.
      * +--------------+--------------+-----+----------------+
@@ -24,9 +28,9 @@ static size_t shellcode_buf_aligned_len(size_t len) {
     return (pages + 1) * pagesize;
 }
 
-#define PROT_RWX (PROT_READ | PROT_WRITE | PROT_EXEC)
-
-static void *allocate_shellcode_buf(size_t len) {
+static void *
+allocate_shellcode_buf(size_t len)
+{
     int pagesize = getpagesize();
     size_t bytes = shellcode_buf_aligned_len(len);
     size_t non_guard_bytes = bytes - pagesize;
@@ -49,7 +53,9 @@ static void *allocate_shellcode_buf(size_t len) {
     }
 }
 
-static void free_shellcode_buf(void *ptr, size_t len) {
+static void
+free_shellcode_buf(void *ptr, size_t len)
+{
     size_t bytes = shellcode_buf_aligned_len(len);
 
     // Wow! We made it this far. Reset the protection.
@@ -63,17 +69,21 @@ static void free_shellcode_buf(void *ptr, size_t len) {
 
 typedef int (*sh_fn_t)(void);
 
-static int geronimo(const void *buf) {
+static int
+geronimo(const void *buf)
+{
     sh_fn_t fn = (sh_fn_t) buf;
 
     // Good luck!
     return fn();
 }
 
-static int run(const void *buf, size_t len) {
+static int
+run(const void *buf, size_t len)
+{
     void *shellcode = allocate_shellcode_buf(len);
     if (shellcode == NULL) {
-        return -1;
+        return -1; // TODO: add meaningful error codes
     }
 
     memcpy(shellcode, buf, len);
@@ -82,7 +92,9 @@ static int run(const void *buf, size_t len) {
     return ret;
 }
 
-static bool fork_and_run(const void *buf, size_t len, int *status) {
+static bool
+fork_and_run(const void *buf, size_t len, int *status)
+{
     pid_t child = fork();
     if (child == -1) {
         // Error forking
@@ -117,7 +129,9 @@ const char sh_native_run_docs[] = "Executes arbitrary machine code. " \
 /* Runs completely arbitrary machine instructions.
  * Example: shellen_native.run(b'\x90' * 1000)
  */
-PyObject *sh_native_run(PyObject *self, PyObject *args) {
+PyObject *
+sh_native_run(PyObject *self, PyObject *args)
+{
     Py_buffer buffer;
     if (!PyArg_ParseTuple(args, "y*", &buffer)) {
         return NULL;
@@ -132,7 +146,9 @@ PyObject *sh_native_run(PyObject *self, PyObject *args) {
 }
 
 /* Initialize the module. */
-PyMODINIT_FUNC PyInit_shellen_native(void) {
+PyMODINIT_FUNC
+PyInit_shellen_native(void)
+{
     static struct PyMethodDef shellen_methods[] = {
         {"run", sh_native_run, METH_VARARGS, sh_native_run_docs},
         {NULL}

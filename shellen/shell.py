@@ -184,7 +184,7 @@ class Shellen(CLI):
             '                                  This function requests shellcodes from http://shell-storm.org\n'
             '\n<white,bold>ASSEMBLY MODE</>\n'
             '   <white,bold>asm</> mode is intended for assembling instructions.\n'
-            '   To assembly instuctions, write them separated by colons.\n'
+            '   To assemble instuctions, write them separated by semicolons.\n'
             '   If your shellcode has a null bytes, then they will be highlighted after assembling.\n'
             '   Remember to use appropriate <white,bold>arch</> for assembling!\n'
             '   <white,underline>Example of using</>:\n'
